@@ -12,6 +12,10 @@ categories = [
     "食品",
     "ドリンク",
 ]
+categories_colors = [
+    "LightPink1",
+    "light sky blue"
+]
 
 class Register:
     def __init__(self, root):
@@ -42,13 +46,14 @@ class Register:
             self.tabsOBJs.append(
                 {
                     "title":tk.Label(tab["frame"], text = str(tab["name"])),
-                    "sum":tk.Label(tab["frame"], text = "SUM",
-                    width=10, anchor="e", font=("Courier", 12))
                 }
             )
-            self.tabsOBJs[-1]["title"].pack()
-            self.tabsOBJs[-1]["sum"].pack(side=tk.RIGHT)
+            self.tabsOBJs[-1]["SumLettersLabel"] = tk.Label(tab["frame"], text="SUM", width=10, anchor="e", font=("Courier", 12))
+            self.tabsOBJs[-1]["sum"] = tk.Label(tab["frame"], text="0", width=10, anchor="e", font=("Courier", 12))
 
+            self.tabsOBJs[-1]["title"].grid(row=0, column=0, columnspan=6, sticky="w", pady=(5, 10))
+            self.tabsOBJs[-1]["SumLettersLabel"].grid(row=999, column=4, sticky="e")
+            self.tabsOBJs[-1]["sum"].grid(row=999, column=5, sticky="e")
         self.tab_control.pack(expand=True, fill="both")
         self.add_product_to_tab(0)
         self.add_product_to_tab(1)
@@ -64,12 +69,13 @@ class Register:
         self.tabsOBJs[tab_number]["sum"]["text"] = str(sum)     
 
     def add_product_to_tab(self, prodcut_number):
+        bg_color = categories_colors[products[prodcut_number]["category"]]
         index = self.tab_control.index("current")
         id = len(self.productsOBJs_in_tab[index])
         print("index", index)
         self.productsOBJs_in_tab[index].append(
             {
-                "frame":tk.Frame(self.tabs[index]["frame"]),
+                "frame":tk.Frame(self.tabs[index]["frame"], bg=bg_color),
             }
         )
         self.productsOBJs_in_tab[index][-1]["label"] = tk.Label(
@@ -77,14 +83,16 @@ class Register:
             text = products[prodcut_number]["name"],
             width=10,  # 固定幅を設定
             anchor="e",  # 右寄せ
-            font=("Courier", 12)  # 等幅フォント
+            font=("Courier", 12),  # 等幅フォント
+            bg=bg_color
         )
         self.productsOBJs_in_tab[index][-1]["unit_price"] = tk.Label(
             self.productsOBJs_in_tab[index][-1]["frame"], 
             text = str(products[prodcut_number]["price"]),
             width=10,  # 固定幅を設定
             anchor="e",  # 右寄せ
-            font=("Courier", 12)  # 等幅フォント
+            font=("Courier", 12),  # 等幅フォント
+            bg=bg_color
         )
         self.productsOBJs_in_tab[index][-1]["minus_button"] = tk.Button(
             self.productsOBJs_in_tab[index][-1]["frame"], 
@@ -96,7 +104,8 @@ class Register:
             text = 1,
             width=1,  # 固定幅を設定
             anchor="e",  # 右寄せ
-            font=("Courier", 12)  # 等幅フォント
+            font=("Courier", 12),  # 等幅フォント
+            bg=bg_color
         )
         self.productsOBJs_in_tab[index][-1]["plus_button"] = tk.Button(
             self.productsOBJs_in_tab[index][-1]["frame"], 
@@ -108,16 +117,17 @@ class Register:
             width=10,  # 固定幅を設定
             anchor="e",  # 右寄せ
             font=("Courier", 12),  # 等幅フォント
-            text = str(products[prodcut_number]["price"])
+            text = str(products[prodcut_number]["price"]),
+            bg=bg_color
         )
 
-        self.productsOBJs_in_tab[index][-1]["frame"].pack()
-        self.productsOBJs_in_tab[index][-1]["label"].pack(side=tk.LEFT)
-        self.productsOBJs_in_tab[index][-1]["unit_price"].pack(side=tk.LEFT)
-        self.productsOBJs_in_tab[index][-1]["minus_button"].pack(side=tk.LEFT)
-        self.productsOBJs_in_tab[index][-1]["quantity"].pack(side=tk.LEFT)
-        self.productsOBJs_in_tab[index][-1]["plus_button"].pack(side=tk.LEFT)
-        self.productsOBJs_in_tab[index][-1]["sum"].pack(side=tk.LEFT)
+        self.productsOBJs_in_tab[index][-1]["frame"].grid(row=id, column=0, columnspan=6, sticky="w")
+        self.productsOBJs_in_tab[index][-1]["label"].grid(row=0,column=0)
+        self.productsOBJs_in_tab[index][-1]["unit_price"].grid(row=0,column=1)
+        self.productsOBJs_in_tab[index][-1]["minus_button"].grid(row=0,column=2)
+        self.productsOBJs_in_tab[index][-1]["quantity"].grid(row=0,column=3)
+        self.productsOBJs_in_tab[index][-1]["plus_button"].grid(row=0,column=4)
+        self.productsOBJs_in_tab[index][-1]["sum"].grid(row=0,column=5)
         
         self.calculate_and_print_sum(self.tab_control.index("current"))
 
@@ -174,14 +184,16 @@ class Register:
                 tk.Button(
                     self.tabs_products[product["category"]]["frame"],
                     text=f"{product['name']}\n{product['price']}円",
-                    command=lambda i=i:self.add_product_to_tab(i)
+                    command=lambda i=i:self.add_product_to_tab(i),
+                    bg=categories_colors[products[i]["category"]]
                 )
             )
             self.products_buttons[-1].pack()
         self.tabs_control_products.pack(expand=True, fill="both")
     
 root = tk.Tk()
+root.geometry("800x800")
 Register = Register(root)
-button = tk.Button(root, text="destroy", command = lambda:Register.erase_product_to_tab(1))
-button.pack()
+#button = tk.Button(root, text="destroy", command = lambda:Register.erase_product_to_tab(1))
+#button.pack()
 root.mainloop()
