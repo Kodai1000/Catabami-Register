@@ -60,7 +60,6 @@ class Register:
         self.add_product_to_tab(2)
         self.add_product_to_tab(3)
 
-    
     def calculate_and_print_sum(self, tab_number):
         sum = 0
         for productOBJ in self.productsOBJs_in_tab[tab_number]:
@@ -121,7 +120,7 @@ class Register:
             bg=bg_color
         )
 
-        self.productsOBJs_in_tab[index][-1]["frame"].grid(row=id, column=0, columnspan=6, sticky="w")
+        self.productsOBJs_in_tab[index][-1]["frame"].grid(row=id+1, column=0, columnspan=6, sticky="w")
         self.productsOBJs_in_tab[index][-1]["label"].grid(row=0,column=0)
         self.productsOBJs_in_tab[index][-1]["unit_price"].grid(row=0,column=1)
         self.productsOBJs_in_tab[index][-1]["minus_button"].grid(row=0,column=2)
@@ -188,7 +187,7 @@ class Register:
                     bg=categories_colors[products[i]["category"]]
                 )
             )
-            self.products_buttons[-1].pack()
+            self.products_buttons[-1].pack(side=tk.LEFT)
         self.tabs_control_products.pack(expand=True, fill="both")
     
 root = tk.Tk()
