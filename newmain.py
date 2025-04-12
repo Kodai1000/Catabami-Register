@@ -45,7 +45,7 @@ class Receipt:
         )
     
     def plus_quantity(self, table_id, products_list_id):
-        self.tables[table_id][products_list_id]["quantity"] += 1
+        self.tables[table_id]["products_list"][products_list_id]["quantity"] += 1
 
     def minus_quantity(self, table_id, products_list_id):
         self.tables[table_id][products_list_id]["quantity"] -= 1
@@ -90,6 +90,7 @@ class UI:
             button.pack()
 
     def add_product_to_table(self, product_id, quantity):
+        length = len(self.tables_objs)
         table_id  = self.receipt_tab_control.index("current")
         bought = self.products_information.products[product_id]
         frame = tk.Frame(self.receipt_tab[table_id])
@@ -97,7 +98,7 @@ class UI:
         label_unitprice = tk.Label(frame, text=bought["price"])
         minus_button = tk.Button(frame, text="-")
         label_quantity = tk.Label(frame, text=quantity)
-        plus_button =tk.Button(frame, text="+")
+        plus_button =tk.Button(frame, text="+", command=lambda length=length: self.plus_quantity_button(table_id, length) )
         label_sumprice = tk.Label(frame, text=bought["price"]*quantity)
         label_name.grid(row=0, column=0)
         label_unitprice.grid(row=0,column=1)
@@ -119,7 +120,14 @@ class UI:
         )
         self.receipt.add_product_to_table(table_id, product_id, quantity)
 
+    def plus_quantity_button(self, table_id, product_list_id):
+        self.receipt.plus_quantity(table_id, product_list_id)
+        self.update(table_id, product_list_id)
 
+    def update(self, table_id, product_list_id):
+        self.tables_objs[table_id][product_list_id]["label_name"]["text"] = self.receipt.tables[table_id][product_list_id]["name"]
+        self.tables_objs[table_id][product_list_id]["label_quantity"]["text"] = self.receipt.tables[table_id][product_list_id]["quantity"]
+        self.tables_objs[table_id][product_list_id]["label_sumprice"]["text"] = str(self.receipt.tables[table_id][product_list_id]["price"]*self.receipt.tables[table_id][product_list_id]["quantity"])
 
 if __name__ == "__main__":
     products_information = ProductsInformation()
