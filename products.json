@@ -1,0 +1,20 @@
+[
+    {
+        "name": "cake",
+        "price": 100,
+        "category": 0,
+        "quantity": 1
+    },
+    {
+        "name": "coffee",
+        "price": 100,
+        "category": 1,
+        "quantity": 1
+    },
+    {
+        "name": "tea",
+        "price": 250,
+        "category": 1,
+        "quantity": 1
+    }
+]
